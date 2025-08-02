@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis de Consumo de Agua</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --color-primary: #2563eb;
+            --color-secondary: #4b5563;
+            --color-dispositivo1: #3b82f6;
+            --color-dispositivo2: #10b981;
+            --color-exceso: #ef4444;
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            line-height: 1.4;
+            color: #1f2937;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+        .main-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            align-items: start;
+        }
+        h1 { font-size: 1.5rem; color: var(--color-primary); margin-bottom: 0.5rem; }
+        h2 { font-size: 1.2rem; color: var(--color-primary); margin: 0.8rem 0 0.5rem; }
+        h3 { font-size: 1rem; margin: 0.5rem 0 0.3rem; }
+        p { margin: 0.3rem 0; font-size: 0.9rem; }
+        .dispositivo {
+            background: white;
+            border-radius: 0.3rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            padding: 0.8rem;
+            margin-bottom: 1.2rem;
+            border-top: 3px solid var(--color-dispositivo1);
+        }
+        .dispositivo-compacto {
+            width: 90%;
+        }
+        .dispositivo:nth-child(2) { border-top-color: var(--color-dispositivo2); }
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.8rem;
+            margin: 0.8rem 0;
+        }
+        .stat-card {
+            padding: 0.7rem;
+            border-radius: 0.3rem;
+            background: #f9fafb;
+            box-shadow: 0 1px 1px rgba(0,0,0,0.05);
+        }
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin: 0.2rem 0;
+        }
+        .chart-container {
+            height: 250px;
+            margin: 1rem 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0.6rem 0;
+            font-size: 0.8rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        th, td {
+            padding: 0.4rem 0.6rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        th {
+            background-color: #f3f4f6;
+            font-weight: 600;
+            font-size: 0.75rem;
+        }
+        tr:nth-child(even) { background-color: #f9fafb; }
+        .exceso { color: var(--color-exceso); font-weight: 600; }
+        .formula {
+            font-family: monospace;
+            background: #e5e7eb;
+            padding: 0.2rem 0.4rem;
+            border-radius: 0.2rem;
+            display: inline-block;
+            margin: 0.2rem 0;
+            font-size: 0.75rem;
+        }
+        .comparacion {
+            background: #f0fdf4;
+            padding: 0.7rem;
+            border-radius: 0.3rem;
+            margin: 0.8rem 0;
+            border-left: 3px solid var(--color-dispositivo2);
+            font-size: 0.85rem;
+        }
+        .info-adicional {
+            background: #f8fafc;
+            padding: 1rem;
+            border-radius: 0.3rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+        }
+        @media (max-width: 768px) {
+            .main-container { grid-template-columns: 1fr; }
+            .dispositivo-compacto { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <h1>Análisis de Consumo de Agua</h1>
+    <p>Reporte generado el 03/08/2025</p>
+
+    <div class="main-container">
+        <!-- Columna izquierda (Dispositivo Principal + espacio adicional) -->
+        <div>
+            <div class="dispositivo dispositivo-compacto">
+                <h2>Dispositivo Principal</h2>
+                <p><strong>ID:</strong> 688e2c8674469e6688a1eb5d</p>
+                
+                <table>
+                    <thead><tr><th>Fecha</th><th>Consumo</th><th>Estado</th></tr></thead>
+                    <tbody>
+                        <tr><td>24/07</td><td>38.2</td><td>Normal</td></tr>
+                        <tr><td>25/07</td><td>42.1</td><td>Normal</td></tr>
+                        <tr><td>26/07</td><td>47.5</td><td>Normal</td></tr>
+                        <tr><td>27/07</td><td>51.3</td><td class="exceso">Exceso</td></tr>
+                        <tr><td>28/07</td><td>39.8</td><td>Normal</td></tr>
+                        <tr><td>29/07</td><td>45.6</td><td>Normal</td></tr>
+                        <tr><td>30/07</td><td>49.2</td><td class="exceso">Exceso</td></tr>
+                        <tr><td>31/07</td><td>43.7</td><td>Normal</td></tr>
+                        <tr><td>01/08</td><td>40.9</td><td>Normal</td></tr>
+                        <tr><td>02/08</td><td>44.4</td><td>Normal</td></tr>
+                    </tbody>
+                </table>
+
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <h3>Media</h3><div class="stat-value">44.31 m³</div>
+                        <p class="formula">443.1 / 10 = 44.31</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Mediana</h3><div class="stat-value">44.0 m³</div>
+                        <p class="formula">(43.7 + 44.4) / 2</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Espacio para información adicional -->
+            <div class="info-adicional">
+                <h3>Información Adicional</h3>
+                <p><strong>Consumo promedio histórico:</strong> 42.5 m³</p>
+                <p><strong>Variación mensual:</strong> +4.3%</p>
+                <p><strong>Días con exceso:</strong> 2 (27 y 30 julio)</p>
+                <p><strong>Recomendación:</strong> Revisar posibles fugas los días de mayor consumo</p>
+            </div>
+        </div>
+
+        <!-- Columna derecha (Sistema de consumo) -->
+        <div>
+            <div class="dispositivo">
+                <h2>Sistema de consumo</h2>
+                <p><strong>ID:</strong> 688e2d3974469e6688a1eb60</p>
+                
+                <table>
+                    <thead><tr><th>Fecha</th><th>Consumo</th><th>Estado</th></tr></thead>
+                    <tbody>
+                        <tr><td>24/07</td><td>12.5</td><td>Normal</td></tr>
+                        <tr><td>25/07</td><td>14.8</td><td>Normal</td></tr>
+                        <tr><td>26/07</td><td>18.3</td><td class="exceso">Exceso</td></tr>
+                        <tr><td>27/07</td><td>13.2</td><td>Normal</td></tr>
+                        <tr><td>28/07</td><td>16.7</td><td class="exceso">Exceso</td></tr>
+                        <tr><td>29/07</td><td>11.9</td><td>Normal</td></tr>
+                        <tr><td>30/07</td><td>15.4</td><td>Normal</td></tr>
+                        <tr><td>31/07</td><td>17.1</td><td class="exceso">Exceso</td></tr>
+                        <tr><td>01/08</td><td>14.2</td><td>Normal</td></tr>
+                        <tr><td>02/08</td><td>15.29</td><td>Normal</td></tr>
+                    </tbody>
+                </table>
+
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <h3>Media</h3><div class="stat-value">14.94 m³</div>
+                        <p class="formula">149.39 / 10 = 14.94</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Mediana</h3><div class="stat-value">15.0 m³</div>
+                        <p class="formula">(14.8 + 15.29) / 2</p>
+                    </div>
+                </div>
+
+                <div class="chart-container"><canvas id="chartDispositivo2"></canvas></div>
+
+                <div class="comparacion">
+                    <h3>Comparación entre Dispositivos</h3>
+                    <p><strong>Diferencia en media:</strong> 44.31 m³ vs 14.94 m³</p>
+                    <p><strong>Días con exceso:</strong> 2/10 vs 3/10</p>
+                    <p><strong>Variabilidad:</strong> Mayor fluctuación en el sistema de consumo</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gráfico para el Dispositivo Principal (debajo de las columnas) -->
+    <div class="chart-container"><canvas id="chartDispositivo1"></canvas></div>
+
+    <script>
+        // Datos Dispositivo 1
+        const datos1 = {
+            fechas: ['24/07','25/07','26/07','27/07','28/07','29/07','30/07','31/07','01/08','02/08'],
+            consumos: [38.2,42.1,47.5,51.3,39.8,45.6,49.2,43.7,40.9,44.4],
+            excesos: [false,false,false,true,false,false,true,false,false,false]
+        };
+
+        // Datos Dispositivo 2
+        const datos2 = {
+            fechas: ['24/07','25/07','26/07','27/07','28/07','29/07','30/07','31/07','01/08','02/08'],
+            consumos: [12.5,14.8,18.3,13.2,16.7,11.9,15.4,17.1,14.2,15.29],
+            excesos: [false,false,true,false,true,false,false,true,false,false]
+        };
+
+        // Gráfico Dispositivo 1
+        const ctx1 = document.getElementById('chartDispositivo1').getContext('2d');
+        new Chart(ctx1, {
+            type: 'line',
+            data: {
+                labels: datos1.fechas,
+                datasets: [{
+                    label: 'Consumo Principal (m³)',
+                    data: datos1.consumos,
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    borderColor: 'rgba(59, 130, 246, 1)',
+                    borderWidth: 2,
+                    tension: 0.3,
+                    pointBackgroundColor: datos1.consumos.map((_,i) => 
+                        datos1.excesos[i] ? 'rgba(239, 68, 68, 1)' : 'rgba(59, 130, 246, 1)'),
+                    pointRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    tooltip: { callbacks: { label: ctx => `Consumo: ${ctx.raw} m³` } },
+                    legend: { position: 'top' }
+                },
+                scales: {
+                    y: { beginAtZero: false, min: 30, title: { display: true, text: 'Consumo (m³)' } },
+                    x: { ticks: { maxRotation: 45, minRotation: 45 } }
+                }
+            }
+        });
+
+        // Gráfico Dispositivo 2
+        const ctx2 = document.getElementById('chartDispositivo2').getContext('2d');
+        new Chart(ctx2, {
+            type: 'line',
+            data: {
+                labels: datos2.fechas,
+                datasets: [{
+                    label: 'Consumo Secundario (m³)',
+                    data: datos2.consumos,
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    borderColor: 'rgba(16, 185, 129, 1)',
+                    borderWidth: 2,
+                    tension: 0.3,
+                    pointBackgroundColor: datos2.consumos.map((_,i) => 
+                        datos2.excesos[i] ? 'rgba(239, 68, 68, 1)' : 'rgba(16, 185, 129, 1)'),
+                    pointRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    tooltip: { callbacks: { label: ctx => `Consumo: ${ctx.raw} m³` } },
+                    legend: { position: 'top' }
+                },
+                scales: {
+                    y: { beginAtZero: false, min: 10, title: { display: true, text: 'Consumo (m³)' } },
+                    x: { ticks: { maxRotation: 45, minRotation: 45 } }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
